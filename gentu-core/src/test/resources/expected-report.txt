@@ -1,0 +1,25 @@
+========== TEST REPORT ==========
+Generated on : {generatedAt}
+Number of tests : 1
+============================================================
+
+Summary :
+
+[1] testName_withData_shouldDoSomething
+
+============================================================
+
+[1] testName_withData_shouldDoSomething
+	Class: TestClass#testMethod
+	Description: desc
+	Given:
+		given1
+		given2
+	Expected:
+		expected1
+		expected2
+	Executed at: 2026-07-05T00:00
+
+------------------------------------------------------------
+
+============================================================
