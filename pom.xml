@@ -26,12 +26,31 @@
         <mockito.version>5.17.0</mockito.version>
         <junit-platform-launcher.version>1.14.4</junit-platform-launcher.version>
         <slf4j.version>2.0.18</slf4j.version>
+        <jacoco.version>0.8.15</jacoco.version>
+
+        <!-- SonarCloud -->
+        <sonar.organization>benjaminparsy</sonar.organization>
+        <sonar.projectKey>benjaminparsy_gentu</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${project.basedir}/../gentu-core/target/site/jacoco/jacoco.xml,
+            ${project.basedir}/../gentu-junit5/target/site/jacoco/jacoco.xml,
+            ${project.basedir}/target/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <modules>
         <module>gentu-core</module>
         <module>gentu-junit5</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/benjaminparsy/gentu</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -74,5 +93,37 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
