@@ -1,7 +1,9 @@
 package com.benjamin.parsy.gentu.core.filegenerator.text;
 
+import com.benjamin.parsy.gentu.core.GentuLogger;
 import com.benjamin.parsy.gentu.core.Properties;
 import com.benjamin.parsy.gentu.core.dto.TestResult;
+import com.benjamin.parsy.gentu.core.filegenerator.ReportFileWriterException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -10,8 +12,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestReportTextFileTest {
 
-    private final TestReportTextFile testReportTextFile = new TestReportTextFile();
+    private final TestReportTextFile testReportTextFile = new TestReportTextFile(GentuLogger.noOp());
 
     @TempDir
     Path tempDir;
@@ -45,7 +45,7 @@ class TestReportTextFileTest {
     }
 
     @Test
-    void writeReport_withSingleResult_shouldMatchExpectedReport() throws IOException {
+    void writeReport_withSingleResult_shouldMatchExpectedReport() throws IOException, ReportFileWriterException {
 
         // Given
         List<TestResult> testResultList = List.of(buildTestResult());
@@ -141,8 +141,7 @@ class TestReportTextFileTest {
                 Collections.emptyList(),
                 List.of("expected1", "expected2"),
                 "TestClass",
-                "testMethod",
-                LocalDate.of(2026, Month.JULY, 5).atStartOfDay()
+                "testMethod"
         );
     }
 

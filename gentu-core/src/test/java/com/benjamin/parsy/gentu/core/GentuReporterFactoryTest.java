@@ -17,7 +17,7 @@ class GentuReporterFactoryTest {
         Path directory = Path.of("target", "gentu-report");
 
         // When
-        GentuReporter reporter = GentuReporterFactory.create(directory);
+        GentuReporter reporter = GentuReporterFactory.create(directory, ReportType.TEXT, GentuLogger.noOp());
 
         // Then
         assertNotNull(reporter);

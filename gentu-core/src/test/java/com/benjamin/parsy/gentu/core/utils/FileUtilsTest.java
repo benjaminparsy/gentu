@@ -30,6 +30,55 @@ class FileUtilsTest {
     }
 
     @Test
+    void isDirectory_withNull_shouldReturnFalse() {
+
+        // When
+        boolean result = FileUtils.isDirectory(null);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    void isDirectory_withNonExistentPath_shouldReturnFalse() {
+
+        // Given
+        Path nonExistent = tempDir.resolve("does-not-exist");
+
+        // When
+        boolean result = FileUtils.isDirectory(nonExistent);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    void isDirectory_withFile_shouldReturnFalse() throws IOException {
+
+        // Given
+        Path file = Files.createTempFile(tempDir, "file", ".txt");
+
+        // When
+        boolean result = FileUtils.isDirectory(file);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    void isDirectory_withDirectory_shouldReturnTrue() throws IOException {
+
+        // Given
+        Path directory = Files.createTempDirectory(tempDir, "dir");
+
+        // When
+        boolean result = FileUtils.isDirectory(directory);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
     void deleteContent_withNonDirectory_shouldThrowIOException() throws IOException {
 
         // Given

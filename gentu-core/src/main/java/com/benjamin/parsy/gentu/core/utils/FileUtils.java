@@ -15,6 +15,16 @@ public final class FileUtils {
     }
 
     /**
+     * Returns {@code true} if {@code path} is non-null and refers to an existing directory.
+     *
+     * @param path the path to test
+     * @return {@code true} if {@code path} is a directory
+     */
+    public static boolean isDirectory(Path path) {
+        return path != null && Files.isDirectory(path);
+    }
+
+    /**
      * Deletes all entries (files and subdirectories) inside the given directory without removing the directory itself.
      *
      * @param path the directory whose content must be deleted

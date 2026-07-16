@@ -18,7 +18,6 @@ Summary :
 	Expected:
 		expected1
 		expected2
-	Executed at: 2026-07-05T00:00
 
 ------------------------------------------------------------
 

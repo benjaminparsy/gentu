@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.MixedTest" tests="3" failures="1" errors="0" skipped="1">
+    <testcase name="passingTest" classname="com.example.MixedTest" time="0.01"/>
+    <testcase name="failingTest" classname="com.example.MixedTest" time="0.01">
+        <failure message="assertion failed" type="AssertionError">stack trace here</failure>
+    </testcase>
+    <testcase name="skippedTest" classname="com.example.MixedTest" time="0.00">
+        <skipped/>
+    </testcase>
+</testsuite>

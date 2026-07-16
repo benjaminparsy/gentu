@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.ParamTest" tests="1" failures="0" errors="0" skipped="0">
+    <testcase name="parameterizedTest(String, int)" classname="com.example.ParamTest" time="0.01"/>
+</testsuite>

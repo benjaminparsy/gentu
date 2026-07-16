@@ -1,12 +1,13 @@
 package com.benjamin.parsy.gentu.core.filegenerator.text;
 
+import com.benjamin.parsy.gentu.core.GentuLogger;
 import com.benjamin.parsy.gentu.core.Properties;
+import com.benjamin.parsy.gentu.core.downloader.DownloaderException;
 import com.benjamin.parsy.gentu.core.downloader.TestReportFileDownloader;
 import com.benjamin.parsy.gentu.core.downloader.TestReportFileDownloaderImpl;
 import com.benjamin.parsy.gentu.core.dto.TestResult;
+import com.benjamin.parsy.gentu.core.filegenerator.ReportFileWriterException;
 import com.benjamin.parsy.gentu.core.filegenerator.TestReportFileWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,31 +18,45 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * {@link TestReportFileWriter} that produces a plain-text ({@code .txt}) report and downloads
+ * the associated input files into the output directory.
+ */
 public class TestReportTextFile implements TestReportFileWriter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestReportTextFile.class);
     private static final DateTimeFormatter FILE_TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
     private static final String SECTION_SEPARATOR = "=".repeat(60);
     private static final String TEST_SEPARATOR = "-".repeat(60);
     private static final String FILE_EXTENSION = ".txt";
 
+    private final GentuLogger log;
     private final TestReportFileDownloader downloader;
 
-    public TestReportTextFile() {
-        this.downloader = new TestReportFileDownloaderImpl();
+    public TestReportTextFile(GentuLogger log) {
+        this.log = log;
+        this.downloader = new TestReportFileDownloaderImpl(log);
     }
 
     @Override
-    public void writeReport(List<TestResult> results, Path gentuDirectory) throws IOException {
+    public void writeReport(List<TestResult> results, Path gentuDirectory) throws ReportFileWriterException {
 
         LocalDateTime generatedAt = LocalDateTime.now(ZoneId.systemDefault());
         String testReportFilename = Properties.TEST_REPORT_BASE_FILENAME + generatedAt.format(FILE_TIMESTAMP_FORMAT) + FILE_EXTENSION;
         Path reportFilePath = gentuDirectory.resolve(testReportFilename);
 
-        Files.writeString(reportFilePath, buildReport(results, generatedAt));
-        LOG.info("Report written: {}", reportFilePath.toAbsolutePath());
+        try {
+            Files.writeString(reportFilePath, buildReport(results, generatedAt));
+        } catch (IOException e) {
+            throw new ReportFileWriterException("An error occurred while writing the report", e);
+        }
 
-        downloader.downloadFile(results, gentuDirectory);
+        log.info("Report written: " + reportFilePath.toAbsolutePath());
+
+        try {
+            downloader.downloadFile(results, gentuDirectory);
+        } catch (DownloaderException e) {
+            throw new ReportFileWriterException("An error occurred while downloading the files", e);
+        }
     }
 
     private String buildReport(List<TestResult> results, LocalDateTime generatedAt) {
@@ -97,7 +112,6 @@ public class TestReportTextFile implements TestReportFileWriter {
         sb.append("\tExpected:\n");
         appendValues(sb, result.expected());
 
-        sb.append(String.format("\tExecuted at: %s%n", result.executedAt()));
         sb.append("\n").append(TEST_SEPARATOR).append("\n\n");
 
     }
